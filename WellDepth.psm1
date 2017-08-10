@@ -30,6 +30,8 @@ function Get-ElkremDepthOfWell {
     $Temperature = Get-Temperature -Fahrenheit 92
     $SpeedOfSound = Get-SpeedOfSoundMetersPerSecond -Temperature $Temperature
     $SoundTravelDistanceInMeters = $LengthofTimeToEchoInSeconds * $SpeedOfSound
+    $SoundTravelDistanceInFeet = $SoundTravelDistanceInMeters * 3.28084
+    $WaterDepthInFeet = $SoundTravelDistanceInFeet / 2
 }
 
 function Get-SpeedOfSoundMetersPerSecond {
