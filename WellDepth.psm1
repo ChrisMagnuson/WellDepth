@@ -1,6 +1,4 @@
-﻿$LengthofTimeToEcho = 0.018
-$SpeedOfSound
-
+﻿
 function Get-Temperature {
     [CmdletBinding(DefaultParameterSetName="All")]
     param (
@@ -11,7 +9,7 @@ function Get-Temperature {
     $TemperatureInKelvin = if ($Kelvin) { 
         $Kelvin 
     } elseif ($Fahrenheit) {
-        (($Fahrenheit + 459.67) * 5/9)
+        (($Fahrenheit + 459.67) * (5/9))
     } elseif ($Celsius) {
         ($Celsius + 273.15)
     }
@@ -19,22 +17,24 @@ function Get-Temperature {
     [PSCustomObject]@{} | 
     Add-Member -MemberType NoteProperty -PassThru -Name Kelvin -Value $TemperatureInKelvin |
     Add-Member -MemberType ScriptProperty -PassThru -Name Fahrenheit -Value {
-        ($this.Kelvin * 9/5 - 459.67)
+        ($this.Kelvin * (9/5) - 459.67)
     } |
     Add-Member -MemberType ScriptProperty -Name Celsius -PassThru -Value {
-        ($This.Kelvin + 273.15)
+        ($This.Kelvin - 273.15)
     }
     
 }
 
 function Get-ElkremDepthOfWell {
-    
-    $TemperatureInFahrenheit
+    $LengthofTimeToEchoInSeconds = 0.018
+    $Temperature = Get-Temperature -Fahrenheit 92
+    $SpeedOfSound = Get-SpeedOfSoundMetersPerSecond -Temperature $Temperature
+    $SoundTravelDistanceInMeters = $LengthofTimeToEchoInSeconds * $SpeedOfSound
 }
 
 function Get-SpeedOfSoundMetersPerSecond {
     param (
-        $TemperatureInCelsius
+        $Temperature
     )
-    331.4 + (.6 * $TemperatureInCelsius)
+    331.4 + (.6 * $Temperature.Celsius)
 }
